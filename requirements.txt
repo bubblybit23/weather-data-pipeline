@@ -2,4 +2,4 @@ pandas
 duckdb
 requests
 streamlit
-os
+
