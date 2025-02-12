@@ -1,0 +1,27 @@
+name: Weather Data Pipeline
+on:
+  schedule:
+    - cron: "0 * * * *"  # Runs every hour
+  workflow_dispatch:
+
+jobs:
+  etl_job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+      - name: Set up Python
+        uses: actions/setup-python@v3
+        with:
+          python-version: 3.9
+      - name: Install Dependencies
+        run: pip install pandas duckdb requests
+      - name: Run ETL Pipeline
+        run: |
+          python fetch_data.py
+          python store_data.py
+      - name: Upload DB Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: weather_db
+          path: weather_data.db
