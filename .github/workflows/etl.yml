@@ -29,13 +29,13 @@ jobs:
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add weather_data.db  # Or the correct path if it's in a subfolder
+          git add weather_data.db
           git commit -m "Update weather data"
 
       - name: Push Database Changes
         run: |
-          git remote set-url origin https://${{ secrets.WEATHER_PERSONAL_ACCESS_TOKEN }}@github.com/bubblybit23/weather-data-pipeline.git
-          git push origin ${{ github.ref }}
+          git remote set-url origin https://github.com/bubblybit23/weather-data-pipeline.git  # No PAT in URL
+          git push origin ${{ github.ref }} -H "Authorization: token ${{ secrets.WEATHER_PERSONAL_ACCESS_TOKEN }}" # Use PAT as header
 
       - name: Deploy to Render
         run: |
