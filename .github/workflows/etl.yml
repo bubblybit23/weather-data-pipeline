@@ -10,10 +10,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v3  # Or a specific v3 version like v3.1.0
+        uses: actions/checkout@v3
 
       - name: Set Up Python
-        uses: actions/setup-python@v4  # Or a specific v4 version
+        uses: actions/setup-python@v4
         with:
           python-version: "3.9"
 
@@ -26,13 +26,13 @@ jobs:
           python store_data.py
 
       - name: Upload Database Artifact
-        uses: actions/upload-artifact@v4  # Use v4!
+        uses: actions/upload-artifact@v4
         with:
           name: weather_db
           path: weather_data.db
 
       - name: Download Database Artifact (for Render Deployment)
-        uses: actions/download-artifact@v4  # Use v4!
+        uses: actions/download-artifact@v4
         with:
           name: weather_db
           path: data  # Or your chosen path
