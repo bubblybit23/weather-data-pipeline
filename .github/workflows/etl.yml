@@ -35,7 +35,7 @@ jobs:
       - name: Push Database Changes
         uses: ad-m/github-push-action@master
         with:
-          github_token: ${{ secrets.WEATHER_DATA_PERSONAL_ACCESS_TOKEN }}  # Correctly referencing the secret
+          github_token: ${{ secrets.WEATHER_PERSONAL_ACCESS_TOKEN }}  # Correctly referencing the secret
           branch: ${{ github.ref }}
 
       - name: Deploy to Render
