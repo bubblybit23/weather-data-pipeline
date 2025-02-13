@@ -1,0 +1,45 @@
+name: ETL Pipeline
+
+on:
+  schedule:
+    - cron: "0 * * * *"  # Runs every hour
+  workflow_dispatch:  # Allow manual trigger
+
+jobs:
+  etl_job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Set Up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.9"
+
+      - name: Install Dependencies
+        run: pip install duckdb pandas requests
+
+      - name: Run ETL Process
+        run: |
+          python fetch_data.py
+          python store_data.py
+
+      - name: Upload Database Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: weather_db  # Consistent name
+          path: weather_data.db
+
+      - name: Download Database Artifact (for Render Deployment)
+        uses: actions/download-artifact@v3
+        with:
+          name: weather_db # Consistent name
+          path: . # Downloads to the current directory
+
+      - name: Deploy to Render
+        run: |
+          curl -X POST "https://api.render.com/v1/services/${{ secrets.WEATHER_DATA_RENDER_SERVICE_ID }}/deploys" \
+            -H "Authorization: Bearer ${{ secrets.WEATHER_DATA_RENDER_API_KEY }}" \
+            -H "Content-Type: application/json" \
+            -d "{}"
