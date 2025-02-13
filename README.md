@@ -28,7 +28,7 @@ streamlit run app.py
 - **Displays dashboard** with trends & raw data  
 
 ## Project Structure 📁  
-'''
+```
 weather-data-pipeline/
 ├── app.py          # Streamlit dashboard
 ├── fetch_data.py   # Fetch weather data
@@ -36,7 +36,7 @@ weather-data-pipeline/
 ├── weather_data.db # DuckDB database
 ├── requirements.txt # Dependencies
 └── README.md       # Documentation
-'''
+```
 
 
 ## Future Improvements 📌  
