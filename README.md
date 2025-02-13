@@ -22,23 +22,25 @@ pip install -r requirements.txt
 
 streamlit run app.py
 
-How It Works 🛠️
-Checks & loads data from weather_data.db
-Fetches data if missing and stores it
-Displays dashboard with trends & raw data
+## How It Works ⚙️  
+- **Checks & loads data** from `weather_data.db`  
+- **Fetches data** if missing and stores it  
+- **Displays dashboard** with trends & raw data  
 
-Project Structure 📁
+## Project Structure 📁  
 
 weather-dashboard/
-│── app.py              # Streamlit dashboard
-│── fetch_data.py       # Fetch weather data
-│── store_data.py       # Store data in DuckDB
-│── weather_data.db     # DuckDB database
-│── requirements.txt    # Dependencies
-│── README.md           # Documentation
+├── app.py # Streamlit dashboard
+├── fetch_data.py # Fetch weather data
+├── store_data.py # Store data in DuckDB
+├── weather_data.db # DuckDB database
+├── requirements.txt # Dependencies
+└── README.md # Documentation
 
 
-Future Improvements 📌
-Add humidity & precipitation data.
-Include date range filters.
-Perform trend analysis.
+
+## Future Improvements 📌  
+- Add **humidity & precipitation** data.  
+- Include **date range filters**.  
+- Perform **trend analysis**.  
+
