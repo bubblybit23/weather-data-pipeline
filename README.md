@@ -22,7 +22,7 @@ pip install -r requirements.txt
 
 streamlit run app.py
 
-#### **How It Works 🛠️
+How It Works 🛠️
 Checks & loads data from weather_data.db
 Fetches data if missing and stores it
 Displays dashboard with trends & raw data
