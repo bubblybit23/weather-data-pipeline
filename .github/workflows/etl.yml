@@ -33,10 +33,9 @@ jobs:
           git commit -m "Update weather data"
 
       - name: Push Database Changes
-        uses: ad-m/github-push-action@master
-        with:
-          github_token: ${{ secrets.WEATHER_PERSONAL_ACCESS_TOKEN }}  # Correctly referencing the secret
-          branch: ${{ github.ref }}
+        run: |
+          git remote set-url origin https://${{ secrets.WEATHER_PERSONAL_ACCESS_TOKEN }}@github.com/bubblybit23/weather-data-pipeline.git
+          git push origin ${{ github.ref }}
 
       - name: Deploy to Render
         run: |
