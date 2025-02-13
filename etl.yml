@@ -1,8 +1,9 @@
 name: Weather Data Pipeline
+
 on:
   schedule:
     - cron: "0 * * * *"  # Runs every hour
-  workflow_dispatch:
+  workflow_dispatch:  # Allows manual triggering
 
 jobs:
   etl_job:
@@ -13,7 +14,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v3
         with:
-          python-version: 3.9
+          python-version: 3.9  # Or your preferred version
       - name: Install Dependencies
         run: pip install pandas duckdb requests
       - name: Run ETL Pipeline
@@ -21,7 +22,13 @@ jobs:
           python fetch_data.py
           python store_data.py
       - name: Upload DB Artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3 # Updated artifact version
         with:
           name: weather_db
           path: weather_data.db
+      - name: Deploy to Render
+        run: |
+          curl -X POST "https://api.render.com/v1/services/${{ secrets.srv-cum97llumphs738f0hrg/logs }}/deploys" \
+            -H "Authorization: Bearer ${{ secrets.rnd_wCy2RqIbjeiYnGD521pNsc35cbyB }}" \
+            -H "Content-Type: application/json" \
+            -d "{}"
