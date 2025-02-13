@@ -36,7 +36,11 @@ import pandas as pd
 #       UTILITY FUNCTIONS      #
 # ---------------------------- #
 
+
+DB_PATH = "weather_data.db"  # Path in the repository root
+
 def db_exists():
+    return os.path.exists(DB_PATH)
     """Checks if the DuckDB database file exists."""
     return os.path.exists("weather_data.db")
 
