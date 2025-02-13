@@ -60,6 +60,13 @@ def load_data():
 # Set the Streamlit app title
 st.title("🌤️ Manila Weather Dashboard")
 
+# Check for database existence *before* attempting to load data
+if not db_exists():
+    st.error("❌ Database not found! Please wait for the ETL pipeline to update it.")
+    st.stop()  # Stop execution if DB is missing
+
+df = load_data()  # ***CALL load_data() HERE***  This is the crucial missing line
+
 if df is not None and not df.empty:
     # Convert 'time' column to datetime for proper analysis
     df['time'] = pd.to_datetime(df['time'])
