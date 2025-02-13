@@ -25,6 +25,19 @@ jobs:
           python fetch_data.py
           python store_data.py
 
+      - name: Commit Database Changes
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add weather_data.db  # Or the correct path if it's in a subfolder
+          git commit -m "Update weather data"
+
+      - name: Push Database Changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.WEATHER_PERSONAL_ACCESS_TOKEN }} # Use PAT here
+          branch: ${{ github.ref }}
+
       - name: Deploy to Render
         run: |
           curl -X POST "https://api.render.com/v1/services/${{ secrets.WEATHER_DATA_RENDER_SERVICE_ID }}/deploys" \
