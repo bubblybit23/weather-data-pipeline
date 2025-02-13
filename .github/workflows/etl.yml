@@ -34,8 +34,12 @@ jobs:
 
       - name: Push Database Changes
         run: |
-          git remote set-url origin https://github.com/bubblybit23/weather-data-pipeline.git  # No PAT in URL
-          git push origin ${{ github.ref }} -H "Authorization: token ${{ secrets.WEATHER_PERSONAL_ACCESS_TOKEN }}" # Use PAT as header
+          BRANCH=$(echo "${{ github.ref }}" | sed 's/refs\/heads\///') # Extract branch name
+          curl -X POST \
+            -H "Authorization: token ${{ secrets.WEATHER_PERSONAL_ACCESS_TOKEN }}" \
+            -H "Content-Type: application/json" \
+            -d '{ "ref": "refs/heads/'${BRANCH}'" }' \
+            "https://api.github.com/repos/bubblybit23/weather-data-pipeline/git/refs/heads/${{ github.ref }}"
 
       - name: Deploy to Render
         run: |
