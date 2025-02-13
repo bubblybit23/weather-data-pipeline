@@ -25,18 +25,6 @@ jobs:
           python fetch_data.py
           python store_data.py
 
-      - name: Commit Database Changes
-        run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add weather_data.db
-          git commit -m "Update weather data"
-
-      - name: Push Database Changes
-        run: |
-          git remote set-url origin https://${{ secrets.WEATHER_PERSONAL_ACCESS_TOKEN }}@github.com/bubblybit23/weather-data-pipeline.git
-          git push origin ${{ github.ref }}
-
       - name: Deploy to Render
         run: |
           curl -X POST "https://api.render.com/v1/services/${{ secrets.WEATHER_DATA_RENDER_SERVICE_ID }}/deploys" \
