@@ -1,3 +1,32 @@
+"""
+Streamlit app to display Manila weather data.
+
+This app reads weather data from a DuckDB database and displays it
+using Streamlit. The database is expected to be populated by a
+separate ETL (Extract, Transform, Load) process (e.g., a GitHub
+Actions workflow).
+
+Functions:
+    db_exists(): Checks if the DuckDB database file exists.
+    load_data(): Loads weather data from DuckDB into a Pandas DataFrame.
+
+Streamlit Dashboard:
+    - Displays a title ("🌤️ Manila Weather Dashboard").
+    - Checks for the existence of the database before proceeding.
+    - Loads data using load_data().
+    - If data is available, displays a dashboard with:
+        - Sidebar filters for date range.
+        - Summary metrics (average, max, min temperature).
+        - Temperature trends chart.
+        - Moving average chart.
+        - Data details (total data points, time range, columns).
+        - Option to show raw data.
+    - If data is not available, displays a message indicating that the
+      ETL pipeline might be in progress.
+"""
+
+
+
 import duckdb
 import streamlit as st
 import os
@@ -8,57 +37,22 @@ import pandas as pd
 # ---------------------------- #
 
 def db_exists():
-    """
-    Checks if the DuckDB database file exists.
-
-    Returns:
-        bool: True if the database file exists, False otherwise.
-    """
+    """Checks if the DuckDB database file exists."""
     return os.path.exists("weather_data.db")
 
-def run_etl():
-    """
-    Runs the ETL (Extract, Transform, Load) pipeline if the database is missing.
-    
-    This function imports `fetch_data` and `store_data` modules and executes their `main()` functions 
-    to fetch new weather data and store it into the database.
-    """
-    import fetch_data  # Module responsible for fetching weather data from an API
-    import store_data  # Module responsible for storing data in DuckDB
-
-    st.warning("⚠️ Database not found! Fetching and storing new data...")
-
-    try:
-        fetch_data.main()  # Fetch weather data
-        store_data.main()  # Store data into the DuckDB database
-        st.success("✅ Data successfully fetched and stored!")
-    except Exception as e:
-        st.error(f"❌ ETL Process Failed: {e}")
-
-# Check if the database exists, otherwise run the ETL process
-if not db_exists():
-    run_etl()
-
-# Establish a connection to DuckDB
-db_connection = duckdb.connect("weather_data.db")
-
 def load_data():
-    """
-    Loads weather data from DuckDB into a Pandas DataFrame.
-
-    Returns:
-        pd.DataFrame: DataFrame containing the weather data.
-    """
+    """Loads weather data from DuckDB into a Pandas DataFrame."""
     try:
-        df = db_connection.execute("SELECT * FROM weather").df()
+        conn = duckdb.connect("weather_data.db") # Connect inside the function
+        df = conn.execute("SELECT * FROM weather").df()
+        conn.close() # Close the connection after use
         return df
+    except duckdb.CatalogException:  # Handle table not found
+        st.error("❌ Weather data table not found in the database. Please wait for the ETL pipeline to run.")
+        return None  # Return None if the table doesn't exist
     except Exception as e:
         st.error(f"❌ Error loading data: {e}")
         return None
-
-# Load data into a Pandas DataFrame
-df = load_data()
-
 # ---------------------------- #
 #      STREAMLIT DASHBOARD     #
 # ---------------------------- #
