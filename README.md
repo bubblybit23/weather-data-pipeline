@@ -58,7 +58,7 @@ weather-data-pipeline/
 ---
 
 ## 📊 Dashboard Preview
-![Dashboard Preview](https://github.com/bubblybit23/weather-data-pipeline/dashboard_preview.png)
+![Dashboard Preview](https://github.com/bubblybit23/weather-data-pipeline/blob/main/dashboard_preview.png)
 
 ---
 
