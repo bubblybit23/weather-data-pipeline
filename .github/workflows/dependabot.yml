@@ -1,6 +1,0 @@
-version: 2
-updates:
-  - package-ecosystem: "github-actions"
-    directory: "/.github/workflows"  # Or the directory where your workflow file is
-    schedule:
-      interval: "daily" # Or "weekly"
