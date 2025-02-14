@@ -1,4 +1,4 @@
-# 🌤️ Manila Weather Dashboard
+# 🌤️ Manila Temperature Dashboard
 
 An **automated weather data pipeline** built with **Streamlit, DuckDB, GitHub Actions, and Render.com**. This project fetches, stores, and visualizes real-time weather data for **Manila**.
 
