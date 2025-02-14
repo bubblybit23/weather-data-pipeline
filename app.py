@@ -2,6 +2,7 @@ import duckdb
 import streamlit as st
 import os
 import pandas as pd
+import datetime
 
 # ---------------------------- #
 #       UTILITY FUNCTIONS      #
