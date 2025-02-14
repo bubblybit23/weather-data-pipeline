@@ -70,12 +70,12 @@ if df is not None and not df.empty:
     today = datetime.date.today()
     max_end_date = today + pd.Timedelta(days=6)  # Maximum possible end date
 
-    # --- Start Date Selection ---
-    start_date = st.sidebar.date_input("Start Date", today, min_date=today, max_date=max_end_date)
-
-    # --- End Date Calculation and Display ---
-    min_end_date = start_date + pd.Timedelta(days=1)  # Minimum end date (1 day after start)
-    end_date = st.sidebar.date_input("End Date", min_end_date, min_date=min_end_date, max_date=start_date + pd.Timedelta(days=6))
+    start_date = st.date_input("Start Date", datetime.date.today())
+    
+    # Generate possible end dates (1 to 6 days after start_date)
+    possible_end_dates = [start_date + pd.Timedelta(days=i) for i in range(1, 7)]
+    
+    end_date = st.selectbox("End Date", possible_end_dates)
 
     # --- Filtering ---
     filtered_df = df[(df["time"].dt.date >= start_date) & (df["time"].dt.date <= end_date)]
