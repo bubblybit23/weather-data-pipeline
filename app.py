@@ -58,7 +58,7 @@ df = load_latest_data()
 # ---------------------------- #
 
 # Set the Streamlit app title
-st.title("🌤️ Manila Weather Dashboard")
+st.title("🌤️ Manila Temperature Dashboard")
 
 if df is not None and not df.empty:
     # Convert 'time' column to datetime for proper analysis
@@ -78,7 +78,7 @@ if df is not None and not df.empty:
     filtered_df = df[(df["time"].dt.date >= start_date) & (df["time"].dt.date <= end_date)]
 
     # ----------- Summary Metrics ----------- #
-    st.subheader("📊 Weather Summary")
+    st.subheader("📊 Temperature Summary")
     
     # Three columns for displaying key statistics
     col1, col2, col3 = st.columns(3)
