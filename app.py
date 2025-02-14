@@ -41,8 +41,7 @@ def load_latest_data():
     try:
         df = db_connection.execute("""
             SELECT * FROM weather
-            ORDER BY time DESC
-            LIMIT 100
+            ORDER BY time
         """).df()
         return df
     except Exception as e:
