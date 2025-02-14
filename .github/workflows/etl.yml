@@ -1,49 +1,43 @@
-name: ETL Pipeline
+name: Weather ETL
 
 on:
   schedule:
     - cron: "0 * * * *"  # Runs every hour
-  workflow_dispatch:  # Allow manual trigger
+
+  workflow_dispatch:  # Allows manual runs
 
 jobs:
   etl_job:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set Up Python
         uses: actions/setup-python@v4
         with:
-          python-version: "3.9"
+          python-version: "3.10"
 
       - name: Install Dependencies
-        run: pip install duckdb pandas requests
+        run: pip install pandas requests duckdb
 
-      - name: Run ETL Process
+      - name: Run ETL (Fetch & Store)
         run: |
           python fetch_data.py
           python store_data.py
 
-      - name: Commit Database Changes
+      - name: Commit and Push Updated Database
         run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global user.email "github-actions@github.com"
+          git config --global user.name "GitHub Actions"
           git add weather_data.db
-          git commit -m "Update weather data"
+          git commit -m "🔄 Update weather data" || echo "No changes to commit"
+          git push origin main || echo "No changes to push"
 
-      - name: Push Database Changes
-        run: |
-          BRANCH=$(echo "${{ github.ref }}" | sed 's/refs\/heads\///') # Extract branch name
-          curl -X POST \
-            -H "Authorization: token ${{ secrets.WEATHER_PERSONAL_ACCESS_TOKEN }}" \
-            -H "Content-Type: application/json" \
-            -d '{ "ref": "refs/heads/'${BRANCH}'" }' \
-            "https://api.github.com/repos/bubblybit23/weather-data-pipeline/git/refs/heads/${{ github.ref }}"
-
-      - name: Deploy to Render
+      - name: Trigger Render Deployment
         run: |
           curl -X POST "https://api.render.com/v1/services/${{ secrets.WEATHER_DATA_RENDER_SERVICE_ID }}/deploys" \
-            -H "Authorization: Bearer ${{ secrets.WEATHER_DATA_RENDER_API_KEY }}" \
-            -H "Content-Type: application/json" \
-            -d "{}"
+          -H "Authorization: Bearer ${{ secrets.WEATHER_DATA_RENDER_API_KEY }}" \
+          -H "Content-Type: application/json" \
+          -d "{}"
