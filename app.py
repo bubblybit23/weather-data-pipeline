@@ -67,17 +67,17 @@ if df is not None and not df.empty:
     # ----------- Sidebar Filters ----------- #
     st.sidebar.header("🔍 Data Filters")
 
-    # Calculate the valid date range
     today = datetime.date.today()
     max_date = today + pd.Timedelta(days=6)
 
-    # Date input for start date (limited to today and the next 6 days)
-    start_date = st.sidebar.date_input("Start Date", today, min_date=today, max_date=max_date)
+    # Create a list of allowed dates
+    allowed_dates = [today + pd.Timedelta(days=i) for i in range(7)]
 
-    # Calculate the end date (always 6 days after the start date)
+    # Use a selectbox instead of date_input
+    start_date = st.sidebar.selectbox("Start Date", allowed_dates)
+
     end_date = start_date + pd.Timedelta(days=6)
 
-    # Filter the data
     filtered_df = df[(df["time"].dt.date >= start_date) & (df["time"].dt.date <= end_date)]
 
     # ----------- Summary Metrics ----------- #
