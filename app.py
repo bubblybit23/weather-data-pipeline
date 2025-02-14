@@ -8,56 +8,50 @@ import pandas as pd
 # ---------------------------- #
 
 def db_exists():
-    """
-    Checks if the DuckDB database file exists.
-
-    Returns:
-        bool: True if the database file exists, False otherwise.
-    """
+    """Checks if the DuckDB database file exists."""
     return os.path.exists("weather_data.db")
 
 def run_etl():
-    """
-    Runs the ETL (Extract, Transform, Load) pipeline if the database is missing.
-    
-    This function imports `fetch_data` and `store_data` modules and executes their `main()` functions 
-    to fetch new weather data and store it into the database.
-    """
-    import fetch_data  # Module responsible for fetching weather data from an API
-    import store_data  # Module responsible for storing data in DuckDB
+    """Runs the ETL pipeline if the database is missing."""
+    import fetch_data
+    import store_data
 
-    st.warning("⚠️ Database not found! Fetching and storing new data...")
+    st.warning("⚠️ Database not found! Fetching new data...")
 
     try:
-        fetch_data.main()  # Fetch weather data
-        store_data.main()  # Store data into the DuckDB database
+        fetch_data.fetch_data()
+        store_data.store_data()
         st.success("✅ Data successfully fetched and stored!")
     except Exception as e:
         st.error(f"❌ ETL Process Failed: {e}")
 
-# Check if the database exists, otherwise run the ETL process
 if not db_exists():
     run_etl()
 
 # Establish a connection to DuckDB
 db_connection = duckdb.connect("weather_data.db")
 
-def load_data():
+def load_latest_data():
     """
-    Loads weather data from DuckDB into a Pandas DataFrame.
-
+    Loads only the latest weather data from DuckDB.
+    
     Returns:
-        pd.DataFrame: DataFrame containing the weather data.
+        pd.DataFrame: DataFrame containing the latest weather data.
     """
     try:
-        df = db_connection.execute("SELECT * FROM weather").df()
+        df = db_connection.execute("""
+            SELECT * FROM weather
+            ORDER BY time DESC
+            LIMIT 100
+        """).df()
         return df
     except Exception as e:
         st.error(f"❌ Error loading data: {e}")
         return None
 
-# Load data into a Pandas DataFrame
-df = load_data()
+# Load latest data
+df = load_latest_data()
+
 
 # ---------------------------- #
 #      STREAMLIT DASHBOARD     #
