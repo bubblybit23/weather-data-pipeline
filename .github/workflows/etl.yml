@@ -2,7 +2,7 @@ name: Weather ETL
 
 on:
   schedule:
-    - cron: "0 0 * * *" # Runs every hour
+    - cron: "0 16 * * *" # Runs daily at 16:00 UTC (12 midnight PST)
 
   workflow_dispatch:  # Allows manual runs
 
