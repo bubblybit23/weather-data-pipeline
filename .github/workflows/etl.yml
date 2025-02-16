@@ -2,7 +2,7 @@ name: Weather ETL
 
 on:
   schedule:
-    - cron: "0 16 * * *" # Runs daily at 16:00 UTC (12 midnight PST)
+    - cron: "0 16 * * 0"  # Runs weekly on Sunday at 16:00 UTC (12 midnight PST Monday)
 
   workflow_dispatch:  # Allows manual runs
 
@@ -19,23 +19,31 @@ jobs:
         with:
           python-version: "3.10"
 
+      - name: Cache pip dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('./requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
       - name: Install Dependencies
-        run: pip install pandas requests duckdb
+        run: pip install -r requirements.txt
 
       - name: Run ETL (Fetch & Store)
         run: |
           python fetch_data.py
           python store_data.py
-          
-      - name: Commit and Push Changes
+
+      - name: Commit and Push Changes (Always)  <--- Changed
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions@github.com"
           git add weather_data.db
-          git commit -m "🔄 Update weather data" || echo "No changes to commit"
+          git commit -m "🔄 Update weather data"  # No conditional check
           git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/bubblybit23/weather-data-pipeline.git main
 
-      - name: Trigger Render Deployment
+      - name: Trigger Render Deployment (Always)  <--- Changed
         run: |
           curl -X POST "https://api.render.com/v1/services/${{ secrets.WEATHER_DATA_RENDER_SERVICE_ID }}/deploys" \
           -H "Authorization: Bearer ${{ secrets.WEATHER_DATA_RENDER_API_KEY }}" \
