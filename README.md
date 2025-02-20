@@ -5,7 +5,7 @@ An **automated weather data pipeline** built with **Streamlit, DuckDB, GitHub Ac
 ---
 
 ## 🚀 Features
-✅ **Automated ETL Pipeline** using **GitHub Actions** (Runs every hour)  
+✅ **Automated ETL Pipeline** using **GitHub Actions** (Runs every sunday of the week)  
 ✅ **Cloud Deployment** with **Render.com** (No manual execution needed)  
 ✅ **Stores Weather Data Efficiently** in **DuckDB** (Lightweight & Fast)  
 ✅ **Interactive Data Visualizations** (Temperature Trends & Analytics)  
@@ -37,7 +37,7 @@ streamlit run app.py
 - **ETL Pipeline:** Automates data fetching & storage via **GitHub Actions**  
 - **Database:** Uses **DuckDB** to store structured weather data  
 - **Deployment:** Hosted on **Render.com** for real-time dashboard access  
-- **Scheduled Updates:** GitHub Actions **fetches new data hourly** & updates `weather_data.db`  
+- **Scheduled Updates:** GitHub Actions **fetches new data weekly** & updates `weather_data.db`  
 - **Smart Filtering:** Displays only the **latest data** to avoid duplication  
 
 ---
@@ -65,5 +65,5 @@ weather-data-pipeline/
 ## 🔄 Data Processing Flow
 1️⃣ **Fetch Data** (`fetch_data.py`) → Retrieves latest weather data via Open-Meteo API  
 2️⃣ **Store Data** (`store_data.py`) → Inserts & updates data in DuckDB  
-3️⃣ **Automate ETL** (`etl.yml`) → GitHub Actions **fetches & updates** data every hour  
+3️⃣ **Automate ETL** (`etl.yml`) → GitHub Actions **fetches & updates** data every sunday of the week
 4️⃣ **Deploy to Cloud** (`app.py`) → **Streamlit dashboard** fetches latest stored data  
